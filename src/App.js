@@ -1,38 +1,30 @@
+import { useEffect, useState } from "react";
 import logo from "./logo.svg";
 import "./App.css";
-import { incNumber, decNumber } from "./Actions/test.action";
-import { useSelector, useDispatch } from "react-redux";
+// import { incNumber, decNumber } from "./Actions/test.action";
+// import { useSelector, useDispatch } from "react-redux";
+import Card from "./Components/Card";
+
 const App = (props) => {
-  const myState = useSelector((state) => state.test);
-  const dispatch = useDispatch();
+  const [movies, setMovies] = useState([]);
+  useEffect(() => {
+    fetch("https://peaceful-forest-62260.herokuapp.com/")
+      .then((response) => response.json())
+
+      .then((data) => setMovies(data.moviesData));
+  }, []);
+  console.log(movies);
   return (
     <>
-      <div className="container">
-        <h1>Increment/Decrement counter</h1>
-        <h4>using React and Redux</h4>
-
-        <div className="quantity">
-          <a
-            className="quantity__minus"
-            title="Decrement"
-            onClick={() => dispatch(decNumber())}
-          >
-            <span>-</span>
-          </a>
-          <input
-            name="quantity"
-            type="text"
-            className="quantity__input"
-            value={myState}
-          />
-          <a
-            className="quantity plus"
-            title="Increment"
-            onClick={() => dispatch(incNumber())}
-          >
-            <span>+</span>
-          </a>
-        </div>
+      <div style={{ display: "flex", flexWrap: "wrap" }}>
+        {Object.keys(movies).map((e) => {
+          return (
+            <Card
+              thumbnail={movies[e].EventImageUrl}
+              title={movies[e].EventTitle}
+            />
+          );
+        })}
       </div>
     </>
   );
